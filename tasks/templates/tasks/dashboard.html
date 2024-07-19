@@ -13,7 +13,7 @@
         <h1 class="text-2xl font-bold mb-4">Tasky Dashboard</h1>
         <div class="mb-4">
             <div class="flex justify-between items-center">
-                <input type="text" id="search" placeholder="Search tasks..." class="p-2 border rounded">
+                <input type="text" id="search" placeholder="Type to search tasks..." class="p-2 border rounded">
                 <button id="add-task" class="bg-blue-500 text-white p-2 rounded">Add Task</button>
             </div>
         </div>
@@ -151,17 +151,17 @@
                 return cookieValue;
             }
 
-                $('#task-form').submit(function(e) {
-                    e.preventDefault();
-                    const taskData = {
-                        title: $('#task-title').val(),
-                        description: $('#task-description').val(),
-                        status: $('#task-status').val(), // Make sure this field exists and is included
-                        priority: $('#task-priority').val(),
-                        due_date: $('#task-due-date').val(),
-                        category: $('#task-category').val() // Ensure this matches the form and server expectations
-                    };
-                    console.log(taskData)
+            $('#task-form').submit(function(e) {
+                e.preventDefault();
+                const taskData = {
+                    title: $('#task-title').val(),
+                    description: $('#task-description').val(),
+                    status: $('#task-status').val(), // Make sure this field exists and is included
+                    priority: $('#task-priority').val(),
+                    due_date: $('#task-due-date').val(),
+                    category: $('#task-category').val() // Ensure this matches the form and server expectations
+                };
+                console.log(taskData)
                 const csrftoken = getCookie('csrftoken'); // Get CSRF token from cookies
                 $.ajax({
                     url: addTaskUrl,
