@@ -22,18 +22,16 @@ def get_tasks(request, status):
 @csrf_exempt
 @require_POST
 def add_task(request):
-    print("View was called")
-    
     data = json.loads(request.body)
-    print("View was")
+    print(data)  # Print received JSON data
     form = TaskForm(data)
     if form.is_valid():
-        print(data)
         task = form.save(commit=False)
         task.assigned_to = request.user
         task.save()
-        return JsonResponse({'id': task.id, 'message': 'Task created successfully'})
-    return JsonResponse({'error': form.errors}, status=400)
+        return JsonResponse({'id': task.id, "success": True, "message": "Task added successfully."})
+    return JsonResponse({"success": False, "errors": form.errors}, status=400)
+
 
 @login_required
 @csrf_exempt

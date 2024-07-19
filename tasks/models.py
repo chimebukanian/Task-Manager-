@@ -12,6 +12,7 @@ class Task(models.Model):
         ('MEDIUM', 'Medium'),
         ('HIGH', 'High'),
     ]
+
     
     title = models.CharField(max_length=200)
     description = models.TextField()
