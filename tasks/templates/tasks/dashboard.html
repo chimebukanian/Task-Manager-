@@ -14,11 +14,12 @@
         <div class="mb-4">
             <div class="flex justify-between items-center">
                 <input type="text" id="search" placeholder="Type to search tasks..." class="p-2 border rounded">
+<div id="searchResultsDropdown" class="hidden absolute mt-1 w-full bg-white shadow-lg z-10"></div>
                 <button id="add-task" class="bg-blue-500 text-white p-2 rounded">Add Task</button>
             </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div id="in-progress" class="bg-white p-4 rounded shadow">
+            <div id="in_progress" class="bg-white p-4 rounded shadow">
                 <h2 class="text-lg font-semibold mb-2">In Progress</h2>
                 <!-- Tasks will be dynamically inserted here -->
             </div>
@@ -78,6 +79,7 @@
         $(document).ready(function() {
             function loadTasks(status) {
                 $.get(taskUrls[status], function(data) {
+                    console.log(taskUrls[status])
                     const container = $(`#${status.toLowerCase()}`);
                     container.find('.task').remove();
                     data.forEach(task => {
@@ -119,13 +121,26 @@
             }
 
             $('#search').on('input', function() {
-	    
                 const query = $(this).val();
-                $.get(searchTasksUrl + '?q=' + query, function(data) {
-                    // Update task lists with search results
-                });
+                if (query.length > 0) {
+                    const encodedQuery = encodeURIComponent(query);
+                    $.get(`${searchTasksUrl}?q=${encodedQuery}`, function(data) {
+                        const searchResultsDropdown = $('#searchResultsDropdown');
+                        searchResultsDropdown.empty(); // Clear existing results
+            
+                        if (data.tasks && data.tasks.length > 0) {
+                            data.tasks.forEach(task => {
+                                searchResultsDropdown.append(`<a href="/tasks/${task.id}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">${task.name}</a>`);
+                            });
+                            searchResultsDropdown.removeClass('hidden');
+                        } else {
+                            searchResultsDropdown.addClass('hidden');
+                        }
+                    });
+                } else {
+                    $('#searchResultsDropdown').addClass('hidden');
+                }
             });
-
             $('#add-task').click(function() {
                 $('#modal-title').text('Add Task');
                 $('#task-form')[0].reset();

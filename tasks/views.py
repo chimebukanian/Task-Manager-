@@ -56,6 +56,12 @@ def delete_task(request, task_id):
 @login_required
 @require_http_methods(["GET"])
 def search_tasks(request):
+    print('called')
     query = request.GET.get('q', '')
-    tasks = Task.objects.filter(title__icontains=query, assigned_to=request.user).values()
+    if query:
+        tasks = Task.objects.filter(title__icontains=query, assigned_to=request.user).values()
+        print(tasks)
+    else:
+        tasks = Task.objects.none()  # Or return all tasks if that's the intended behavior
+        print(None)
     return JsonResponse(list(tasks), safe=False)
